@@ -274,7 +274,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         },
     ),
     (
-        "aztec",
+        "wunderlich-3",
         LindenmayerSystem {
             start: "Q",
             rules: &[
@@ -297,9 +297,9 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
     (
         "sierpinski-curve",
         LindenmayerSystem {
-            start: "-f++Xf++f++Xf",
-            rules: &[('X', "Xf--f++f--Xf++f++Xf--f++f--X")],
-            angle: 45.0,
+            start: "f+Xf+f+Xf",
+            rules: &[('X', "Xf-f+f-Xf+f+Xf-f+f-X")],
+            angle: 90.0,
             implicit_f: false,
         },
     ),
@@ -442,7 +442,7 @@ fn main() {
         );
 
         let mut args = ArgumentParser::new();
-        args.set_description("Draw fancy curves.\n\nAll color arguments are 3 or 6 digit hex colors, without a leading '#'.");
+        args.set_description("Draw fancy curves.\n\nAll color arguments are 3 or 6 digit hex colors, without a leading '#'. Angles are measured in turns.");
         args.refer(&mut curve_name)
             .add_argument("curve", Store, &curve_name_description)
             .required();
