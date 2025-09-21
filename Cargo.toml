@@ -1,0 +1,13 @@
+[package]
+name = "lindenmayer"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+image = "0.25.*"
+argparse = "0.2.*"
+
+# This package has a _small_ quantity of _performance critical_ code, so as far
+# as tradeoffs go you always want full optimizations.
+[profile.dev]
+opt-level = 3
