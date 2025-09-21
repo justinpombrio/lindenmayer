@@ -56,7 +56,13 @@ pub fn rgb([r, g, b]: [f64; 3]) -> Color {
 
 /// Given a fraction `f` between 0 and 1 along the 3D Hilbert curve, return the color when its
 /// coordinates are interpreted as 16-bit (r, g, b).
-fn hilbert_color_rgb(f: f64) -> [u16; 3] {
+fn hilbert_color_rgb(mut f: f64) -> [u16; 3] {
+    if f >= 1.0 {
+        // This function wraps around at 1.0, but we'd rather it treat 1 the same as 1 - epsilon.
+        f -= 1e-9;
+    }
+    assert!(f >= 0.0);
+    assert!(f < 1.0);
     let depth = 16usize; // 16-bit color
     let index = (f * 2usize.pow(depth as u32).pow(3) as f64).round() as usize;
     let (r, g, b) = hilbert_3d_coords(depth, index);
