@@ -200,7 +200,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "A",
             rules: &[('A', "+Bf-AfA-fB+"), ('B', "-Af+BfB+fA-")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -209,7 +209,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "-BfB+f+BfB",
             rules: &[('A', "+Bf-AfA-fB+"), ('B', "-Af+BfB+fA-")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -227,7 +227,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "R",
             rules: &[('R', "Rf+L"), ('L', "Rf-L")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -236,7 +236,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "A",
             rules: &[('A', "A-B--B+A++AA+B-"), ('B', "+A-BB--B-A++A+B")],
-            angle: 60.0,
+            angle: 1.0 / 6.0,
             implicit_f: true,
         },
     ),
@@ -248,7 +248,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
                 ('L', "LfRfL-f-RfLfR+f+LfRfL"),
                 ('R', "RfLfR+f+LfRfL-f-RfLfR"),
             ],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -257,7 +257,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "S",
             rules: &[('S', "S+fSf-Sf-Sf-S+fS+fS+fSf-S")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -269,7 +269,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
                 ('S', "Sf+S-f-ZfS-fSf+SfZ+f+S-fS"),
                 ('Z', "Zf-Z+f+SfZ+fZf-ZfS-f-Z+fZ"),
             ],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -281,7 +281,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
                 ('P', "-QfQf+PfPfP+f+Pf-QfQ-fP"),
                 ('Q', "Qf+PfP+fQ-f-QfQfQ-fPfP+"),
             ],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -290,7 +290,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "--A",
             rules: &[('A', "B-A-B"), ('B', "A+B+A")],
-            angle: 60.0,
+            angle: 1.0 / 6.0,
             implicit_f: true,
         },
     ),
@@ -299,7 +299,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "f+Xf+f+Xf",
             rules: &[('X', "Xf-f+f-Xf+f+Xf-f+f-X")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: false,
         },
     ),
@@ -308,7 +308,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "X-X-X-X-X-X",
             rules: &[('X', "X-X++X-X")],
-            angle: 60.0,
+            angle: 1.0 / 6.0,
             implicit_f: true,
         },
     ),
@@ -317,7 +317,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "X",
             rules: &[('X', "X-X+X+X-X")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: true,
         },
     ),
@@ -327,7 +327,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "L",
             rules: &[('L', "-R+L++R--L"), ('R', "+L-R--L++R")],
-            angle: 60.0,
+            angle: 1.0 / 6.0,
             implicit_f: true,
         },
     ),
@@ -337,7 +337,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "X",
             rules: &[('X', "+X-X--XX++X+X-")],
-            angle: 60.0,
+            angle: 1.0 / 6.0,
             implicit_f: true,
         },
     ),
@@ -346,7 +346,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "++S",
             rules: &[('S', "+S----S++++S-")],
-            angle: 30.0,
+            angle: 1.0 / 12.0,
             implicit_f: true,
         },
     ),
@@ -357,7 +357,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         LindenmayerSystem {
             start: "R",
             rules: &[('R', "-QR+R+Q-R"), ('Q', "Q+R-Q-QR+")],
-            angle: 90.0,
+            angle: 0.25,
             implicit_f: true,
         },
     ),
@@ -370,7 +370,7 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
                 ('R', "RfL++fLfR--fRfLfR--fRfL++"),
                 ('L', "LfR--fRfL++fLfRfL++fLfR--"),
             ],
-            angle: 60.0,
+            angle: 1.0 / 6.0,
             implicit_f: false,
         },
     ),

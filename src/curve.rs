@@ -210,11 +210,11 @@ impl Turtle {
     fn walk(&mut self, letter: char) -> bool {
         match letter {
             '-' => {
-                self.direction -= self.expander.system.angle / 360.0;
+                self.direction -= self.expander.system.angle;
                 false
             }
             '+' => {
-                self.direction += self.expander.system.angle / 360.0;
+                self.direction += self.expander.system.angle;
                 false
             }
             'f' => {
