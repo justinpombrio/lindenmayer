@@ -639,13 +639,13 @@ fn main() {
         }
         CurveStyle::Straight => {
             let mut start = points.next().unwrap();
-            canvas.draw_circle(start, curve_width, color_scale(0.0));
             for (i, end) in points.enumerate() {
-                let color = color_scale((i + 1) as f64 / curve_len as f64);
+                let color = color_scale(i as f64 / curve_len as f64);
+                canvas.draw_circle(start, curve_width, color);
                 canvas.draw_curve(|f| interpolate(f, start, end), curve_width, color);
-                canvas.draw_circle(end, curve_width, color);
                 start = end;
             }
+            canvas.draw_circle(start, curve_width, color_scale(1.0)); // start is now end
         }
         CurveStyle::Curvy => {
             let mut start = points.next().unwrap();
