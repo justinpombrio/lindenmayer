@@ -3,6 +3,10 @@ use std::collections::HashMap;
 
 const RADS_PER_TURN: f64 = 2.0 * std::f64::consts::PI;
 
+/***********************
+ * Lindenmayer Systems *
+ ***********************/
+
 /// A Lindenmayer system for constructing a fractal curve.
 ///
 /// The curve of iteration N is defined by:
@@ -29,109 +33,19 @@ pub struct LindenmayerSystem {
     pub implicit_f: bool,
 }
 
-struct CurveIter {
-    system: LindenmayerSystem,
-    depth: usize,
-    at_start: bool,
-    stack: Vec<&'static str>,
-    point: Point<f64>,
-    direction: f64,
-    // hack for z-order curve
-    z_index: usize,
-}
-
-impl CurveIter {
-    fn new(system: LindenmayerSystem, depth: usize, direction: f64) -> CurveIter {
-        CurveIter {
-            stack: vec![system.start],
-            system,
-            depth,
-            at_start: true,
-            point: Point { x: 0.0, y: 0.0 },
-            direction,
-            z_index: 0,
-        }
-    }
-}
-
-impl Iterator for CurveIter {
-    type Item = Point<f64>;
-
-    fn next(&mut self) -> Option<Point<f64>> {
-        if self.at_start {
-            self.at_start = false;
-            return Some(self.point);
-        }
-        while let Some(top) = self.stack.last() {
-            let mut chars = top.chars();
-            let letter = match chars.next() {
-                None => {
-                    self.stack.pop();
-                    continue;
-                }
-                Some(letter) => letter,
-            };
-            *self.stack.last_mut().unwrap() = chars.as_str();
-            match letter {
-                '-' => self.direction -= self.system.angle / 360.0,
-                '+' => self.direction += self.system.angle / 360.0,
-                'f' => {
-                    self.point.x += (self.direction * RADS_PER_TURN).cos();
-                    self.point.y += (self.direction * RADS_PER_TURN).sin();
-                    return Some(self.point);
-                }
-                'z' => {
-                    self.z_index += 1;
-                    let mut x = 0;
-                    let mut y = 0;
-                    for i in 0..16 {
-                        x += (1 << i) & (self.z_index >> i);
-                        y += (1 << i) & (self.z_index >> (i + 1));
-                    }
-                    return Some(Point {
-                        x: x as f64,
-                        y: y as f64,
-                    });
-                }
-                'A'..='Z' => {
-                    if self.stack.len() < self.depth + 1 {
-                        self.stack.push(self.system.lookup(letter));
-                    } else if self.system.implicit_f {
-                        self.point.x += (self.direction * RADS_PER_TURN).cos();
-                        self.point.y += (self.direction * RADS_PER_TURN).sin();
-                        return Some(self.point);
-                    }
-                }
-                _ => panic!(
-                    "LindermayerSystem: '{}' not recognized. (Remember: replacement letters must be capitalized.)",
-                    letter
-                ),
-            }
-        }
-        None
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        let len = self.system.len(self.depth);
-        (len, Some(len))
-    }
-}
-
-impl ExactSizeIterator for CurveIter {}
-
 impl LindenmayerSystem {
-    /// Return the sequence of (x, y) points in the `n`th iteration of this fractal curve.
-    pub fn expand(
+    /// Yield the sequence of (x, y) points in the `n`th iteration of this fractal curve.
+    pub fn walk(
         &self,
         depth: usize,
         start_angle: f64,
     ) -> impl ExactSizeIterator<Item = Point<f64>> {
-        CurveIter::new(*self, depth, start_angle)
+        Turtle::new(Expander::new(*self, depth), start_angle)
     }
 
     /// Determine the bounds of this curve. Walks the whole curve!
     pub fn bounds(&self, depth: usize, start_angle: f64) -> Bounds<f64> {
-        let mut points = self.expand(depth, start_angle);
+        let mut points = self.walk(depth, start_angle);
         let first_point = points.next().unwrap();
         let mut bounds = Bounds {
             min: first_point,
@@ -201,6 +115,154 @@ impl LindenmayerSystem {
     }
 }
 
+/****************
+ *   Expander   *
+ * ~~~~~~~~~~~~ *
+ * expand curve *
+ ****************/
+
+struct Expander {
+    system: LindenmayerSystem,
+    depth: usize,
+    stack: Vec<&'static str>,
+}
+
+impl Expander {
+    fn new(system: LindenmayerSystem, depth: usize) -> Expander {
+        Expander {
+            system,
+            depth,
+            stack: vec![system.start],
+        }
+    }
+}
+
+impl Iterator for Expander {
+    type Item = char;
+
+    fn next(&mut self) -> Option<char> {
+        while let Some(top) = self.stack.last() {
+            let mut chars = top.chars();
+            let letter = match chars.next() {
+                None => {
+                    self.stack.pop();
+                    continue;
+                }
+                Some(letter) => letter,
+            };
+            *self.stack.last_mut().unwrap() = chars.as_str();
+            match letter {
+                '-' => return Some('-'),
+                '+' => return Some('+'),
+                'f' => return Some('f'),
+                'z' => return Some('z'),
+                'A'..='Z' => {
+                    if self.stack.len() < self.depth + 1 {
+                        self.stack.push(self.system.lookup(letter));
+                    } else if self.system.implicit_f {
+                        return Some('f');
+                    }
+                }
+                _ => panic!(
+                    "LindermayerSystem: '{}' not recognized. (Remember: replacement letters must be capitalized.)",
+                    letter
+                ),
+            }
+        }
+        None
+    }
+}
+
+/**************
+ *   Turtle   *
+ * ~~~~~~~~~~ *
+ * walk curve *
+ **************/
+
+struct Turtle {
+    expander: Expander,
+    at_start: bool,
+    point: Point<f64>,
+    direction: f64,
+    // hack for z-order curve
+    z_index: usize,
+}
+
+impl Turtle {
+    fn new(expander: Expander, direction: f64) -> Turtle {
+        Turtle {
+            expander,
+            at_start: true,
+            point: Point { x: 0.0, y: 0.0 },
+            direction,
+            z_index: 0,
+        }
+    }
+
+    /// Walk according to `letter`. Returns `true` if the Turtle moved (as opposed to only
+    /// turning).
+    fn walk(&mut self, letter: char) -> bool {
+        match letter {
+            '-' => {
+                self.direction -= self.expander.system.angle / 360.0;
+                false
+            }
+            '+' => {
+                self.direction += self.expander.system.angle / 360.0;
+                false
+            }
+            'f' => {
+                self.point.x += (self.direction * RADS_PER_TURN).cos();
+                self.point.y += (self.direction * RADS_PER_TURN).sin();
+                true
+            }
+            'z' => {
+                self.z_index += 1;
+                let mut x = 0;
+                let mut y = 0;
+                for i in 0..16 {
+                    x += (1 << i) & (self.z_index >> i);
+                    y += (1 << i) & (self.z_index >> (i + 1));
+                }
+                self.point = Point {
+                    x: x as f64,
+                    y: y as f64,
+                };
+                true
+            }
+            _ => panic!("Bug in LindenmayerSystem: {letter} escaped!"),
+        }
+    }
+}
+
+impl Iterator for Turtle {
+    type Item = Point<f64>;
+
+    fn next(&mut self) -> Option<Point<f64>> {
+        if self.at_start {
+            self.at_start = false;
+            return Some(self.point);
+        }
+        while let Some(letter) = self.expander.next() {
+            if self.walk(letter) {
+                return Some(self.point);
+            }
+        }
+        None
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let len = self.expander.system.len(self.expander.depth);
+        (len, Some(len))
+    }
+}
+
+impl ExactSizeIterator for Turtle {}
+
+/*********
+ * Tests *
+ *********/
+
 #[test]
 fn test_curves() {
     use crate::CURVES;
@@ -209,7 +271,7 @@ fn test_curves() {
 
     assert_eq!(
         hilbert_curve
-            .expand(2, 0.0)
+            .walk(2, 0.0)
             .map(|point| (point.x.round() as i32, point.y.round() as i32))
             .collect::<Vec<_>>(),
         vec![

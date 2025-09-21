@@ -526,23 +526,6 @@ fn main() {
         args.parse_args_or_exit();
     }
 
-    // Look up color scale, or error
-    let color_scale = {
-        let mut found = None;
-        for (name, scale) in COLOR_SCALES {
-            if &color_scale_name == name {
-                found = Some(scale);
-            }
-        }
-        match found {
-            Some(scale) => scale,
-            None => panic!(
-                "Color scale name '{}' not recognized. Options are {}",
-                color_scale_name, color_scale_options
-            ),
-        }
-    };
-
     // Look up curve name, or error
     let curve = {
         let mut found = None;
@@ -560,7 +543,24 @@ fn main() {
         }
     };
 
-    let num_points = curve.expand(depth, start_angle).size_hint().0;
+    // Look up color scale, or error
+    let color_scale = {
+        let mut found = None;
+        for (name, scale) in COLOR_SCALES {
+            if &color_scale_name == name {
+                found = Some(scale);
+            }
+        }
+        match found {
+            Some(scale) => scale,
+            None => panic!(
+                "Color scale name '{}' not recognized. Options are {}",
+                color_scale_name, color_scale_options
+            ),
+        }
+    };
+
+    let num_points = curve.walk(depth, start_angle).size_hint().0;
     println!("Drawing {depth} iterations of {curve_name} curve ({num_points} points).");
 
     // Determine bounds of the curve by walking it
@@ -617,7 +617,7 @@ fn main() {
 
     // Draw the curve itself
     let drawing_size = bounds.max - bounds.min;
-    let points = curve.expand(depth, start_angle);
+    let points = curve.walk(depth, start_angle);
     let curve_len = points.len() - 1;
     let canvas_size = Point {
         x: (image_size - 2 * border_width) as f64,
