@@ -400,7 +400,7 @@ impl FromCommandLine for CurveStyle {
  ********/
 
 fn main() {
-    use argparse::{ArgumentParser, Parse, Store};
+    use argparse::{ArgumentParser, Parse, Store, StoreTrue};
     let curve_name_options = CURVES
         .iter()
         .map(|(name, _)| *name)
@@ -418,6 +418,7 @@ fn main() {
     let mut curve_width = 0.5;
     let mut curve_style = CurveStyle::Straight;
     let mut color_scale_name = "bw".to_owned();
+    let mut only_expand = false;
     let mut start_angle = 0.0;
     let mut image_size = 1024;
     let mut image_name = "curve.png".to_owned();
@@ -465,6 +466,11 @@ fn main() {
             &["-c", "--colors"],
             Store,
             &color_scale_description,
+        );
+        args.refer(&mut only_expand).add_option(
+            &["--expand"],
+            StoreTrue,
+            "Don't draw the curve, just expand it as a string",
         );
         args.refer(&mut start_angle).add_option(
             &["-a", "--angle"],
@@ -542,6 +548,12 @@ fn main() {
             ),
         }
     };
+
+    // If we're simply expanding the Lindenmayer system, do so.
+    if only_expand {
+        println!("{}", curve.expand(depth).collect::<String>());
+        return;
+    }
 
     // Look up color scale, or error
     let color_scale = {

@@ -43,6 +43,10 @@ impl LindenmayerSystem {
         Turtle::new(Expander::new(*self, depth), start_angle)
     }
 
+    pub fn expand(&self, depth: usize) -> impl Iterator<Item = char> {
+        Expander::new(*self, depth)
+    }
+
     /// Determine the bounds of this curve. Walks the whole curve!
     pub fn bounds(&self, depth: usize, start_angle: f64) -> Bounds<f64> {
         let mut points = self.walk(depth, start_angle);
@@ -161,6 +165,8 @@ impl Iterator for Expander {
                         self.stack.push(self.system.lookup(letter));
                     } else if self.system.implicit_f {
                         return Some('f');
+                    } else {
+                        return Some(letter);
                     }
                 }
                 _ => panic!(
@@ -230,7 +236,8 @@ impl Turtle {
                 };
                 true
             }
-            _ => panic!("Bug in LindenmayerSystem: {letter} escaped!"),
+            'A'..='Z' => false,
+            _ => panic!("Bug in LindenmayerSystem: bad {letter}!"),
         }
     }
 }
