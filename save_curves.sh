@@ -5,7 +5,7 @@ run() {
 mkdir images -p
 run moore               11 -t 0     -c 3                   -o images/moore.png
 run zorder              11 -t 0     -c 4                   -o images/z-order.png
-run dragon              22 -t 0     -c cet-l19 --bg 646    -o images/dragon.png   -a 0.075 
+run dragon              22 -t 0     -c cet-l10 --bg 333    -o images/dragon.png   -a 0.075 
 run gosper               8 -t 0     -c h       --bg ddd    -o images/gosper.png
 run gosper               8 -t 0     -c h       --bg eee    -o images/gosper.png --fg 080808 
 run sierpinski-triangle 13 -t 0     -c cet-l17 --bg 000a00 -o images/sierpinski-triangle.png
