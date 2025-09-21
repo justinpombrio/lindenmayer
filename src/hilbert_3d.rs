@@ -49,73 +49,34 @@ pub fn hilbert_3d_coords(depth: usize, index: usize) -> (usize, usize, usize) {
 
 #[test]
 fn test_hilbert_3d_coords() {
-    let expected = [
-        (0, 0, 0),
-        (0, 0, 1),
-        (0, 1, 1),
-        (0, 1, 0),
-        (1, 1, 0),
-        (1, 1, 1),
-        (1, 0, 1),
-        (1, 0, 0),
-        (2, 0, 0),
-        (2, 1, 0),
-        (3, 1, 0),
-        (3, 0, 0),
-        (3, 0, 1),
-        (3, 1, 1),
-        (2, 1, 1),
-        (2, 0, 1),
-        (2, 0, 2),
-        (2, 1, 2),
-        (3, 1, 2),
-        (3, 0, 2),
-        (3, 0, 3),
-        (3, 1, 3),
-        (2, 1, 3),
-        (2, 0, 3),
-        (1, 0, 3),
-        (0, 0, 3),
-        (0, 0, 2),
-        (1, 0, 2),
-        (1, 1, 2),
-        (0, 1, 2),
-        (0, 1, 3),
-        (1, 1, 3),
-        (1, 2, 3),
-        (0, 2, 3),
-        (0, 2, 2),
-        (1, 2, 2),
-        (1, 3, 2),
-        (0, 3, 2),
-        (0, 3, 3),
-        (1, 3, 3),
-        (2, 3, 3),
-        (2, 2, 3),
-        (3, 2, 3),
-        (3, 3, 3),
-        (3, 3, 2),
-        (3, 2, 2),
-        (2, 2, 2),
-        (2, 3, 2),
-        (2, 3, 1),
-        (2, 2, 1),
-        (3, 2, 1),
-        (3, 3, 1),
-        (3, 3, 0),
-        (3, 2, 0),
-        (2, 2, 0),
-        (2, 3, 0),
-        (1, 3, 0),
-        (1, 3, 1),
-        (1, 2, 1),
-        (1, 2, 0),
-        (0, 2, 0),
-        (0, 2, 1),
-        (0, 3, 1),
-        (0, 3, 0),
-    ];
-    for (i, coords) in expected.iter().enumerate() {
-        assert_eq!(hilbert_3d_coords(2, i), *coords);
+    // Construct the 8x8x8 Hilbert cube
+    let seq = (0..512)
+        .map(|i| hilbert_3d_coords(3, i))
+        .collect::<Vec<_>>();
+
+    // Verify the endpoints
+    assert_eq!(seq[0], (0, 0, 0));
+    assert_eq!(seq[seq.len() - 1], (7, 0, 0));
+
+    // Verify that all points are inside the cube boundaries
+    for (x, y, z) in &seq {
+        assert!(*x < 8);
+        assert!(*y < 8);
+        assert!(*z < 8);
+    }
+
+    // Verify that all points are distinct
+    for i in 0..512 {
+        for j in i + 1..512 {
+            assert!(seq[i] != seq[j]);
+        }
+    }
+
+    // Verify that each point differs by 1 from the previous point
+    for i in 0..511 {
+        let (x0, y0, z0) = seq[i];
+        let (x1, y1, z1) = seq[i + 1];
+        let diff = (x0.abs_diff(x1), y0.abs_diff(y1), z0.abs_diff(z1));
+        assert!(diff == (0, 0, 1) || diff == (0, 1, 0) || diff == (1, 0, 0));
     }
 }

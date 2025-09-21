@@ -79,21 +79,21 @@ fn clamp(component: f64) -> (u16, bool) {
 fn test_oklab() {
     // Note: greatest saturation available at l=0.75
 
-    assert_eq!(oklab_hsl_to_srgb([0.0, 0.0, 0.0]), Some([0, 0, 0]));
+    assert_eq!(oklab_hsl_to_srgb([0.0, 0.0, 0.0]), Some(Color([0, 0, 0])));
     assert_eq!(
         oklab_hsl_to_srgb([0.0, 0.0, 1.0]),
-        Some([65485, 65485, 65485])
+        Some(Color([65485, 65485, 65485]))
     );
     assert_eq!(
         oklab_hsl_to_srgb([0.0, 0.175, 0.75]),
-        Some([52629, 43619, 17165])
+        Some(Color([52629, 43619, 17165]))
     );
     assert_eq!(
         oklab_hsl_to_srgb([1.0, 0.175, 0.75]),
-        Some([52629, 43619, 17165])
+        Some(Color([52629, 43619, 17165]))
     );
     assert_eq!(
         oklab_hsl_to_srgb([0.25, 0.175, 0.75]),
-        Some([61232, 35563, 43801])
+        Some(Color([61232, 35563, 43801]))
     );
 }

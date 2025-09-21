@@ -9,7 +9,7 @@ run dragon              22 -t 0     -c cet-l19 --bg 646    -o images/dragon.png 
 run gosper               8 -t 0     -c h       --bg ddd    -o images/gosper.png
 run gosper               8 -t 0     -c h       --bg eee    -o images/gosper.png --fg 080808 
 run sierpinski-triangle 13 -t 0     -c cet-l17 --bg 000a00 -o images/sierpinski-triangle.png
-run sierpinski-curve    11 -t 0     -c h                   -o images/sierpinski-curve.png -a 0.125
+run sierpinski-curve    11 -t 0     -c h                   -o images/sierpinski-curve.png -a -0.125
 run koch                 6 -t 0.75  -c b       --bg ddd    -o images/koch.png     --fill abc -a 0.25
 run triangle            11 -t 0     -c 6       --bg fff    -o images/triangle.png
 run s-curve              5 -t 0.275 -c ry      --bg 181812 -o images/s-curve.png  --style curvy

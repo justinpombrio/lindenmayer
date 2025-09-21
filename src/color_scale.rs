@@ -65,7 +65,7 @@ fn hilbert_color_rgb(mut f: f64) -> [u16; 3] {
     assert!(f < 1.0);
     let depth = 16usize; // 16-bit color
     let index = (f * 2usize.pow(depth as u32).pow(3) as f64).round() as usize;
-    let (r, g, b) = hilbert_3d_coords(depth, index);
+    let (g, b, r) = hilbert_3d_coords(depth, index); // Evan likes the Sierpinski in this color orientation
     [r as u16, g as u16, b as u16]
 }
 
