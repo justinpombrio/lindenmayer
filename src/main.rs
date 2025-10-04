@@ -428,6 +428,7 @@ fn main() {
     let mut checkers = 0;
     let mut checkers_color_1 = Color::from_argument("dcdcaa").unwrap();
     let mut checkers_color_2 = Color::from_argument("b4c8f0").unwrap();
+    let mut rainbow_background = false;
     let mut fill_color = Color::sentinel();
     // border
     let mut border_width = 0;
@@ -512,6 +513,11 @@ fn main() {
             &["--checkers-color-2"],
             Parse,
             "The color of half the checker squares, if --checkerboard is set",
+        );
+        args.refer(&mut rainbow_background).add_option(
+            &["--rainbow-bg"],
+            StoreTrue,
+            "Draw a faintly rainbow background",
         );
         args.refer(&mut fill_color).add_option(
             &["--fill"],
@@ -616,6 +622,21 @@ fn main() {
         );
     } else if foreground == Color::sentinel() {
         canvas.fill_rect(image_bounds, background);
+    } else if rainbow_background {
+        canvas.paint_rect(image_bounds, |pt| {
+            let center = (image_bounds.max + image_bounds.min) / 2;
+            let radius = (image_bounds.max - image_bounds.min) / 2;
+            let x = (pt.x as f64 - center.x as f64) / radius.x as f64;
+            let y = (pt.y as f64 - center.y as f64) / radius.y as f64;
+            let (a, b) = (y / 5.5, x / 5.5);
+            let r = Point { x, y }.abs() / 2.0f64.sqrt();
+            let l = if r > 0.5 {
+                ((r - 0.5) / 8.0).sqrt()
+            } else {
+                0.5
+            };
+            oklab::oklab_hsl_to_srgb([a, b, l]).unwrap()
+        });
     } else {
         canvas.paint_rect(image_bounds, |pt| {
             let center = (image_bounds.max + image_bounds.min) / 2;
