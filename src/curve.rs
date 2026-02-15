@@ -40,7 +40,8 @@ impl LindenmayerSystem {
         depth: usize,
         start_angle: f64,
     ) -> impl ExactSizeIterator<Item = Point<f64>> {
-        Turtle::new(Expander::new(*self, depth), start_angle)
+        let up = -0.25; // Starting direction so turtle faces up on the screen.
+        Turtle::new(Expander::new(*self, depth), up + start_angle)
     }
 
     pub fn expand(&self, depth: usize) -> impl Iterator<Item = char> {

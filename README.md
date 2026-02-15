@@ -56,7 +56,7 @@ Other curves:
   one, I think.
 - `dragon` -- the curve you get by folding a sheet of paper in half to a quarter
   turn, then folding its two straight segments in half at quarter turns, etc.
-- `steeman` -- A space filling curve by Dieter K. Steemann, shown in Pintrest.
+- `steemann` -- A space filling curve by Dieter K. Steemann, shown in Pintrest.
 - `arioni` -- A space filling curve by J. Arioni, published in 2017.
 - `s-curve` -- A curve of my own devising. It's very simple, so I wouldn't be
   surprised if I wasn't the first to find it.
@@ -72,4 +72,4 @@ Running `./save_curves.sh` will generate examples of most of the in `images/`.
 ## Extension
 
 If you want to add another space filling curve or color scheme, look in
-`src/main.rs`. They're all defined in there, and generally very eloquent!
+`src/main.rs`. They're all defined in there, and generally eloquent!

@@ -38,6 +38,7 @@ const COLOR_SCALES: &[(&str, ColorScale)] = &[
     ("h", rgb_hilbert),
     ("ry", rgb_ry),
     ("bg", rgb_bg),
+    ("g", rgb_g),
     ("m", rgb_m),
     ("cet-l08", rgb_cet_l08),
     ("cet-l10", rgb_cet_l10),
@@ -159,6 +160,13 @@ fn rgb_bg(f: f64) -> Color {
     rgb([r, g, b])
 }
 
+fn rgb_g(f: f64) -> Color {
+    let r = 0.0;
+    let g = scale(f, 0.0, 1.0);
+    let b = 0.0;
+    rgb([r, g, b])
+}
+
 fn rgb_m(f: f64) -> Color {
     let r = scale(sawtooth(scale(f, 0.0, 2.5)), 0.0, 0.6);
     let g = scale(sawtooth(scale(f, 0.0, 3.5)), 0.0, 1.0);
@@ -171,7 +179,9 @@ fn rgb_cet_l08(f: f64) -> Color {
 }
 
 fn rgb_cet_l10(f: f64) -> Color {
-    color_scale_from_data(f, CET_L10)
+    let mut data = CET_L10;
+    data.reverse();
+    color_scale_from_data(f, data)
 }
 
 fn rgb_cet_l16(f: f64) -> Color {
@@ -370,6 +380,33 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
                 ('R', "RfL++fLfR--fRfLfR--fRfL++"),
                 ('L', "LfR--fRfL++fLfRfL++fLfR--"),
             ],
+            angle: 1.0 / 6.0,
+            implicit_f: false,
+        },
+    ),
+    (
+        "turtle-L",
+        LindenmayerSystem {
+            start: "-f+ff",
+            rules: &[],
+            angle: 0.25,
+            implicit_f: false,
+        },
+    ),
+    (
+        "turtle-F",
+        LindenmayerSystem {
+            start: "f+f--f+f+f",
+            rules: &[],
+            angle: 0.25,
+            implicit_f: false,
+        },
+    ),
+    (
+        "turtle-hex",
+        LindenmayerSystem {
+            start: "f+f+f+f+f+f+",
+            rules: &[],
             angle: 1.0 / 6.0,
             implicit_f: false,
         },
