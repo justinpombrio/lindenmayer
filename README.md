@@ -59,7 +59,8 @@ Other curves:
 - `steemann` -- A space filling curve by Dieter K. Steemann, shown in Pintrest.
 - `arioni` -- A space filling curve by J. Arioni, published in 2017.
 - `s-curve` -- A curve of my own devising. It's very simple, so I wouldn't be
-  surprised if I wasn't the first to find it.
+  surprised if I wasn't the first to find it. UPDATE: Indeed, it was discovered
+  by Knuth and Davis under the name "Terdragon curve".
 
 Self-overlapping curves of my own devising, which look pretty but make me feel
 shame because a curve shouldn't touch itself:

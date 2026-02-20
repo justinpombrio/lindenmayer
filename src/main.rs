@@ -40,6 +40,7 @@ const COLOR_SCALES: &[(&str, ColorScale)] = &[
     ("bg", rgb_bg),
     ("g", rgb_g),
     ("m", rgb_m),
+    ("m2", rgb_m2),
     ("cet-l08", rgb_cet_l08),
     ("cet-l10", rgb_cet_l10),
     ("cet-l16", rgb_cet_l16),
@@ -172,6 +173,13 @@ fn rgb_m(f: f64) -> Color {
     let g = scale(sawtooth(scale(f, 0.0, 3.5)), 0.0, 1.0);
     let b = scale(sawtooth(scale(f, 0.0, 1.5)), 0.0, 1.0);
     rgb([r, g, b])
+}
+
+fn rgb_m2(f: f64) -> Color {
+    let r = scale(sawtooth(scale(f, 0.0, 2.5)), 0.0, 0.6);
+    let g = scale(sawtooth(scale(f, 0.0, 3.5)), 0.0, 1.0);
+    let b = scale(sawtooth(scale(f, 0.0, 1.5)), 0.0, 1.0);
+    rgb([g, b, r])
 }
 
 fn rgb_cet_l08(f: f64) -> Color {
@@ -332,6 +340,15 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         },
     ),
     (
+        "koch-island",
+        LindenmayerSystem {
+            start: "X-X-X-X",
+            rules: &[('X', "X-X+X+XX-X-X+X")],
+            angle: 0.25,
+            implicit_f: true,
+        },
+    ),
+    (
         // Improper. Self intersects.
         "triangle",
         LindenmayerSystem {
@@ -352,6 +369,8 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
         },
     ),
     (
+        // a.k.a. Terdragon curve, from Knuth and Davis. I independently discovered it. You can
+        // tell because this is a worse way of writing the L-system than they used :joy:.
         "s-curve",
         LindenmayerSystem {
             start: "++S",
@@ -382,6 +401,56 @@ const CURVES: &[(&str, LindenmayerSystem)] = &[
             ],
             angle: 1.0 / 6.0,
             implicit_f: false,
+        },
+    ),
+    (
+        // D. M. McKenna. SquaRecurves, E-tours, eddies and frenzies:
+        // Basic families of Peano curves on the square grid. In Proceedings of the Eugene Strens
+        // Memorial Conference on Recreational Mathematics and its History, 1989.
+        "squarecurve",
+        LindenmayerSystem {
+            start: "R",
+            rules: &[
+                (
+                    'L',
+                    "LLL-RR-R-L+R+LL+R-LR-R-L+L+RR+LLL+R-LR-R-L+L+RR+LLL+RLR-R-L+RL-RR-L-R+L+LL+RRR-",
+                ),
+                (
+                    'R',
+                    "+LLL-RR-R-L+R+LL+RL-R+L+LRL-RRR-LL-R-R+L+LR+L-RRR-LL-R-R+L+LR+L-RR-L-R+L+LL+RRR",
+                ),
+            ],
+            angle: 0.25,
+            implicit_f: true,
+        },
+    ),
+    (
+        // Same source as squarecurve.
+        "etour",
+        LindenmayerSystem {
+            start: "L",
+            rules: &[
+                (
+                    'L',
+                    "RR-L-L+R+RL+R-LR+L-R-L+RLL-R-LRLRL+R-LRLR+L+RRLRL+R-LRL-L-RL+R-LRLRL+R+RLRLRL+R-LL-R-L+RLL-R-LR+R+L-L-R+R+LL-R-LR+R+L-L-R+R+LL+",
+                ),
+                (
+                    'R',
+                    "-RR-L-L+R+R-L-LR+L+RR-L-L+R+R-L-LR+L+RRL-R+L+RR+L-RLRLRL-L-RLRLR+L-RL+R+RLR+L-RLRLL-R-LRLR+L-RLRLR+L+RRL-R+L+R-LR+L-RL-L-R+R+LL",
+                ),
+            ],
+            angle: 0.25,
+            implicit_f: true,
+        },
+    ),
+    (
+        // Levy C Curve
+        "levy",
+        LindenmayerSystem {
+            start: "O",
+            rules: &[('O', "+O--O+")],
+            angle: 0.125,
+            implicit_f: true,
         },
     ),
     (

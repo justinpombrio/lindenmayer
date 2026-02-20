@@ -1,5 +1,5 @@
 run() {
-    cargo run -- -s 2048 "$@"
+    cargo run -- "$@"
 }
 
 mkdir turtles -p

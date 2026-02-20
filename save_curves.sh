@@ -15,4 +15,6 @@ run s-curve              5 -t 0.275 -c ry      --bg 181812 -a 0.25   -o images/s
 run wunderlich-3         3 -t 0.65  -c m       --bg 181818 -a 0.25   -o images/wunderlich-3.png
 run arioni               5 -t 0.7   -c o6      --bg 222    -a -0.078 -o images/arioni.png
 run steemann             3 -t 0.45  -c cet-l08 --bg 111    -a 0.25   -o images/steemann.png --style curvy
+run squarecurve          2 -t 0.55  -c m2      --bg 181818 -a 0.75   -o images/squarecurve.png
+run koch-island          2 -t 0.75  -c 1       --bg 181818 -a 0.177  -o images/koch-island.png
 run fivefold            10 -t 0     -c h       --bg fff    -a 0.4167 -o images/fivefold.png -s 1024
